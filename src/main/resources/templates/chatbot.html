@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Water Quality Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e5ddd5;
+        }
+        .chat-container {
+            width: 400px;
+            max-width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            margin: 20px auto;
+            background-color: white;
+        }
+        .messages {
+            height: 500px;
+            overflow-y: scroll;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .message {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 70%;
+        }
+        .user-message {
+            align-self: flex-end;
+            background-color: #dcf8c6;
+        }
+        .bot-message {
+            align-self: flex-start;
+            background-color: #f1f0f0;
+        }
+        .input-container {
+            display: flex;
+            border-top: 1px solid #ccc;
+            padding: 10px;
+        }
+        .input-container input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            margin-right: 10px;
+            outline: none;
+            background-color: #f1f0f0;
+        }
+        .input-container button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 20px;
+            background-color: #25D366;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+    <div class="messages" id="messages"></div>
+    <div class="input-container">
+        <input type="text" id="userInput" placeholder="Type a message..."/>
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+    function sendMessage() {
+        const input = document.getElementById("userInput").value;
+        const messagesDiv = document.getElementById("messages");
+
+        if (input.trim() === "") return; // Prevent sending empty messages
+        messagesDiv.innerHTML += `<div class="message user-message">${input}</div>`;
+
+        fetch(`/api/chatbot?query=${encodeURIComponent(input)}`)
+            .then(response => response.text()) // Change to text if you're returning plain text
+            .then(data => {
+                messagesDiv.innerHTML += `<div class="message bot-message">${data}</div>`;
+                messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom
+            })
+            .catch(error => {
+                messagesDiv.innerHTML += `<div class="message bot-message">😢 Sorry, I couldn't process that.</div>`;
+            });
+
+        document.getElementById("userInput").value = ''; // Clear input
+        messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom
+    }
+</script>
+
+</body>
+</html>
