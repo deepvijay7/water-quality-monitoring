@@ -67,7 +67,7 @@ This project implements a water quality monitoring system for a village, featuri
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/water-quality-monitoring.git
+   git clone https://github.com/deepvijay7/water-quality-monitoring.git
    cd water-quality-monitoring
    ```
 
